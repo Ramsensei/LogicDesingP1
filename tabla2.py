@@ -1,0 +1,55 @@
+from tkinter import *
+from tkinter import ttk
+
+ventana2 = Tk()
+ventana2.title("Tabla 2. Comprobación de los bits de paridad")
+
+tabla2 = ttk.Treeview(ventana2, columns=("vacio", "d1", "d2", "d3", "d4", "d5", "d6", "d7", "p4", "d8", "d9", "d10", "p3", "d11", "p2", "p1", "prueba", "bit"), show="headings")
+tabla2.grid(row=1, column=0, columnspan=4, padx=5, pady=5)
+tabla2.heading("vacio", text="")
+tabla2.heading("d1", text="d1")
+tabla2.heading("d2", text="d2")
+tabla2.heading("d3", text="d3")
+tabla2.heading("d4", text="d4")
+tabla2.heading("d5", text="d5")
+tabla2.heading("d6", text="d6")
+tabla2.heading("d7", text="d7")
+tabla2.heading("p4", text="p4")
+tabla2.heading("d8", text="d8")
+tabla2.heading("d9", text="d9")
+tabla2.heading("d10", text="d10")
+tabla2.heading("p3", text="p3")
+tabla2.heading("d11", text="d11")
+tabla2.heading("p2", text="p2")
+tabla2.heading("p1", text="p1")
+tabla2.heading("prueba", text="Prueba de paridad")
+tabla2.heading("bit", text="Bit de paridad")
+
+tabla2.column("vacio", width=140)
+tabla2.column("d1", width=60, anchor="center")
+tabla2.column("d2", width=60, anchor="center")
+tabla2.column("d3", width=60, anchor="center")
+tabla2.column("d4", width=60, anchor="center")
+tabla2.column("d5", width=60, anchor="center")
+tabla2.column("d6", width=60, anchor="center")
+tabla2.column("d7", width=60, anchor="center")
+tabla2.column("p4", width=60, anchor="center")
+tabla2.column("d8", width=60, anchor="center")
+tabla2.column("d9", width=60, anchor="center")
+tabla2.column("d10", width=60, anchor="center")
+tabla2.column("p3", width=60, anchor="center")
+tabla2.column("d11", width=60, anchor="center")
+tabla2.column("p2", width=60, anchor="center")
+tabla2.column("p1", width=60, anchor="center")
+tabla2.column("prueba", width=120, anchor="center")
+tabla2.column("bit", width=100, anchor="center")
+
+tabla2.tag_configure("separador", background="#DDD")
+
+tabla2.insert("", "end", values=("Palabra de datos recibida", "1", "2", "3", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"), tags=("separador",))
+tabla2.tag_bind("separador", f"<<TreeviewSelect{0}>>", lambda e: "break")
+for i in range(1,5):
+    tabla2.insert("", "end", values=("p{}".format(i), "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"), tags=("separador",))
+    tabla2.tag_bind("separador", f"<<TreeviewSelect{i}>>", lambda e: "break")
+
+ventana2.mainloop()  # Iniciamos el bucle de eventos
