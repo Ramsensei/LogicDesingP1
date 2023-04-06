@@ -39,6 +39,7 @@ def posRedundantBits(data, r):
  
 def calcParityBits(arr, r):
     n = len(arr)
+    parBits = ""
  
     # For finding rth parity bit, iterate over
     # 0 to r - 1
@@ -55,8 +56,9 @@ def calcParityBits(arr, r):
  
         # String Concatenation
         # (0 to n - 2^r) + parity bit + (n - 2^r + 1 to n)
+        parBits += str(val)
         arr = arr[:n-(2**i)] + str(val) + arr[n-(2**i)+1:]
-    return arr
+    return arr, parBits
  
  
 def detectError(arr, nr):
@@ -69,14 +71,16 @@ def detectError(arr, nr):
         for j in range(1, n + 1):
             if(j & (2**i) == (2**i)):
                 val = val ^ int(arr[-1 * j])
+                if i == 0:
+                    print(arr[-1*j], val)
  
         # Create a binary no by appending
         # parity bits together.
  
-        res = res + val*(10**i)
+        res = res + val*(2**i)
  
     # Convert binary to decimal
-    return int(str(res), 2)
+    return res
  
  
 # Enter the data to be transmitted
@@ -90,14 +94,14 @@ r = calcRedundantBits(m)
 arr = posRedundantBits(data, r)
  
 # Determine the parity bits
-arr = calcParityBits(arr, r)
+arr, parBits = calcParityBits(arr, r)
  
 # Data to be transferred
 print("Data transferred is " + arr) 
  
 # Stimulate error in transmission by changing
 # a bit value.
-# 10101001110 -> 11101001110, error in 10th position.
+# 100110101001010 -> 110110101001010, error in 2th position.
  
 arr = '100110101001010'
 print("Error Data is " + arr)

@@ -40,9 +40,13 @@ tabla.column("binario", width=100)
 tabla.column("octal", width=100)
 tabla.column("decimal", width=100)
 tabla.tag_configure("separador", background="#DDD")
+
+
+
 for i in range(5):
     tabla.insert("", "end", values=("-", "-", "-", "-"), tags=("separador",))
     tabla.tag_bind("separador", f"<<TreeviewSelect{i}>>", lambda e: "break")
+
 
 
 def nzri_plot(bin_str):
