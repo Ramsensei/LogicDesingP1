@@ -2,12 +2,14 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from tab1 import tablaBitsParidad
-from tabla2 import tablaHamming
+from tabla2 import tablaHamming, PAR_BITS
 from hamming import *
 import matplotlib.pyplot as plt
-PAR_BITS = 4 
 
 datos_binario = ""
+datos_recibidos = ""
+
+
 def nzri_plot(bin_str):
     
     # Convierte la cadena binaria en una lista de enteros
@@ -35,12 +37,12 @@ def nzri_plot(bin_str):
             y.extend([polarity])
     
     # Grafica la señal NZRI
-    print(x)
-    print(y)
+    # print(x)
+    # print(y)
     plt.clf()
     plt.plot(x, y, drawstyle='steps-pre')
     plt.ylim(-1.5, 1.5)
-    plt.title('Gráfica NRZI para el número hexadecimal {}'.format(bin_str))
+    plt.title('Gráfica NRZI para el número binario {}'.format(bin_str))
     plt.xlabel('X')
     plt.ylabel('Y')
     
@@ -49,7 +51,9 @@ def nzri_plot(bin_str):
     
     plt.show()
 
-def mostrarTablaBitsParidad(data):
+def mostrarTablaBitsParidad():
+    global datos_recibidos
+    data = datos_binario
     # Calculate the no of Redundant Bits Required
     m = len(data)
     r = calcRedundantBits(m)
@@ -58,12 +62,25 @@ def mostrarTablaBitsParidad(data):
     arr = posRedundantBits(data, r)
     
     # Determine the parity bits
-    arr = calcParityBits(arr, r)
+    datos_recibidos = calcParityBits(arr, r)
 
-    tablaBitsParidad(data, arr)
+    lblDatos["text"] = "Datos Recividos: " + datos_recibidos
 
-def mostrarTablaHamming(data):
-    pass
+    tablaBitsParidad(data, datos_recibidos)
+
+def mostrarTablaHamming():
+
+    correction, err = detectError(datos_recibidos, PAR_BITS)
+
+    tablaHamming(datos_recibidos, err)
+
+def genError():
+    global datos_recibidos, errPos, lblDatos
+    pos = int(errPos.get())
+    if (pos >= 1 and pos <= 15):
+        pos -= 1
+        datos_recibidos = datos_recibidos[:pos] + str(int(datos_recibidos[pos]) ^ 1) + datos_recibidos[pos+1:]
+        lblDatos["text"] = "Datos Recividos: " + datos_recibidos
 
 def convertir():
     global datos_binario
@@ -82,6 +99,10 @@ def convertir():
     except ValueError:
         messagebox.showerror("Error", "El número ingresado no es hexadecimal")
 
+
+
+    
+
 # Creamos la ventana principal
 ventana = Tk()
 ventana.title("Proyecto diseño logico")
@@ -92,9 +113,17 @@ Label(ventana, text="Ingrese un número hexadecimal de 11 bits (000 a 7FF)").gri
 entrada = Entry(ventana)
 entrada.grid(row=0, column=1, padx=5, pady=5)
 Button(ventana, text="Convertir", command=convertir).grid(row=0, column=2, padx=5, pady=5)
-Button(ventana, text="Mostrar NZRI", command=lambda:nzri_plot(datos_binario)).grid(row=2, column=0, padx=5, pady=5)
-Button(ventana, text="Tabla Bits de Paridad", command=lambda:mostrarTablaBitsParidad(datos_binario)).grid(row=2, column=1, padx=5, pady=5)
-Button(ventana, text="Tabla Bits de Hamming", command=lambda:mostrarTablaHamming(datos_binario)).grid(row=2, column=2, padx=5, pady=5)
+
+errPos = Spinbox(ventana, from_= 0, to= 15, increment = 1, wrap = True)
+errPos.grid(row=2, column=0, padx=5, pady=5)
+lblDatos = Label(ventana, text="Datos Recividos: " + datos_recibidos)
+lblDatos.grid(row=2, column=2, padx=5, pady=5)
+
+
+Button(ventana, text="Añadir Error", command=genError).grid(row=2, column=1, padx=5, pady=5)
+Button(ventana, text="Mostrar NZRI", command=lambda:nzri_plot(datos_binario)).grid(row=3, column=0, padx=5, pady=5)
+Button(ventana, text="Tabla Bits de Paridad", command=mostrarTablaBitsParidad).grid(row=3, column=1, padx=5, pady=5)
+Button(ventana, text="Tabla Bits de Hamming", command=mostrarTablaHamming).grid(row=3, column=2, padx=5, pady=5)
 
 
 

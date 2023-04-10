@@ -1,12 +1,25 @@
 from tkinter import *
 from tkinter import ttk
+PAR_BITS = 4
 
+def determinarError(n):
+    if n == 1:
+        return "Error"
+    else:
+        return "Correcto"
 
-def tablaHamming():
+def valoresDeParidad(con_paridad, i):
+    lista_numeros = list(con_paridad)
+    for j in range(len(lista_numeros)):
+        if(j & (2**i) == (2**i)):
+            lista_numeros[j] = "-"
+    return tuple(lista_numeros)
+
+def tablaHamming(recibido, tests):
     ventana2 = Toplevel()
     ventana2.title("Tabla 2. Comprobación de los bits de paridad")
     ventana2.resizable(False,False)
-    tablaHamming = ttk.Treeview(ventana2, columns=("vacio", "d1", "d2", "d3", "d4", "d5", "d6", "d7", "p4", "d8", "d9", "d10", "p3", "d11", "p2", "p1", "prueba", "bit"), show="headings")
+    tablaHamming = ttk.Treeview(ventana2, columns=("vacio", "d1", "d2", "d3", "d4", "d5", "d6", "d7", "p4", "d8", "d9", "d10", "p3", "d11", "p2", "p1", "prueba", "bit"), show="headings", height=5)
     tablaHamming.grid(row=1, column=0, columnspan=4, padx=5, pady=5)
     tablaHamming.heading("vacio", text="")
     tablaHamming.heading("d1", text="d1")
@@ -48,13 +61,14 @@ def tablaHamming():
 
     tablaHamming.tag_configure("separador", background="#DDD")
 
-    tablaHamming.insert("", "end", values=("Palabra de datos recibida", "1", "2", "3", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"), tags=("separador",))
+    tablaHamming.insert("", "end", values=("Palabra de datos recibida", ) + tuple(recibido), tags=("separador",))
     tablaHamming.tag_bind("separador", f"<<TreeviewSelect{0}>>", lambda e: "break")
     for i in range(1,5):
-        tablaHamming.insert("", "end", values=("p{}".format(i), "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"), tags=("separador",))
+        tablaHamming.insert("", "end", values=("p{}".format(i), ) + valoresDeParidad(recibido, i-1) + (determinarError(tests[i-1]), tests[i-1]), tags=("separador",))
         tablaHamming.tag_bind("separador", f"<<TreeviewSelect{i}>>", lambda e: "break")
 
     ventana2.mainloop()  # Iniciamos el bucle de eventos
 
 if __name__ == "__main__":
-    tablaHamming()
+    tablaHamming("100110101001010")
+    pass

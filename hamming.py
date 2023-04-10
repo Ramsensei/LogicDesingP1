@@ -63,6 +63,7 @@ def calcParityBits(arr, r):
 def detectError(arr, nr):
     n = len(arr)
     res = 0
+    errorTests = [0, 0, 0, 0]
  
     # Calculate parity bits again
     for i in range(nr):
@@ -71,17 +72,18 @@ def detectError(arr, nr):
             if(j & (2**i) == (2**i)):
                 val = val ^ int(arr[-1 * j])
                 if i == 0:
-                    print(arr[-1*j], val)
+                    # print(arr[-1*j], val)
+                    pass
  
         # Create a binary no by appending
         # parity bits together.
  
         res = res + val*(2**i)
- 
+        errorTests[i] = val
     # Convert binary to decimal
-    return res
+    return res, errorTests
  
-if __name__ == "main":
+if __name__ == "__main__":
     # Enter the data to be transmitted
     data = '10011011000'
     
@@ -102,9 +104,9 @@ if __name__ == "main":
     # a bit value.
     # 100110101001010 -> 110110101001010, error in 2th position.
     
-    arr = '100110101001010'
+    arr = '101110101001010'
     print("Error Data is " + arr)
-    correction = detectError(arr, r)
+    correction, err = detectError(arr, r)
     if(correction==0):
         print("There is no error in the received message.")
     else:
