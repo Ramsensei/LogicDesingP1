@@ -2,8 +2,10 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from tab1 import tablaBitsParidad
+from tabla2 import tablaHamming
 from hamming import *
 import matplotlib.pyplot as plt
+PAR_BITS = 4 
 
 datos_binario = ""
 def nzri_plot(bin_str):
@@ -12,12 +14,12 @@ def nzri_plot(bin_str):
     binary_list = [int(d) for d in bin_str]
     
     # Inicializa los ejes x e y
-    x = []
-    y = []
+    x = [0,1]
+    y = [-1,-1]
     
     # Inicializa la variable de polaridad
-    polarity = 1
-    
+    polarity = -1
+
     # Recorre la lista binaria y agrega los valores de x e y
     for i in range(len(binary_list)):
         #print(i)
@@ -25,14 +27,16 @@ def nzri_plot(bin_str):
         if binary_list[i] == 1:
             # Si el bit es 1, invierte la polaridad y agrega una línea vertical
             polarity *= -1
-            x.extend([i, i+1])
-            y.extend([polarity, polarity])
+            x.extend([i+2])
+            y.extend([polarity])
         else:
             # Si el bit es 0, agrega una línea horizontal
-            x.extend([i, i])
-            y.extend([polarity, polarity])
+            x.extend([i+2])
+            y.extend([polarity])
     
     # Grafica la señal NZRI
+    print(x)
+    print(y)
     plt.clf()
     plt.plot(x, y, drawstyle='steps-pre')
     plt.ylim(-1.5, 1.5)
@@ -57,6 +61,9 @@ def mostrarTablaBitsParidad(data):
     arr = calcParityBits(arr, r)
 
     tablaBitsParidad(data, arr)
+
+def mostrarTablaHamming(data):
+    pass
 
 def convertir():
     global datos_binario
@@ -87,6 +94,7 @@ entrada.grid(row=0, column=1, padx=5, pady=5)
 Button(ventana, text="Convertir", command=convertir).grid(row=0, column=2, padx=5, pady=5)
 Button(ventana, text="Mostrar NZRI", command=lambda:nzri_plot(datos_binario)).grid(row=2, column=0, padx=5, pady=5)
 Button(ventana, text="Tabla Bits de Paridad", command=lambda:mostrarTablaBitsParidad(datos_binario)).grid(row=2, column=1, padx=5, pady=5)
+Button(ventana, text="Tabla Bits de Hamming", command=lambda:mostrarTablaHamming(datos_binario)).grid(row=2, column=2, padx=5, pady=5)
 
 
 
