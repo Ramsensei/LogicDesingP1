@@ -17,7 +17,7 @@ def valoresDeParidad(con_paridad, i):
             lista_numeros[j] = "-"
     return tuple(lista_numeros)
 
-def tablaBitsParidad(sin_paridad, con_paridad):
+def tablaBitsParidad(sin_paridad, con_paridad,paridad):
     ventana = Toplevel()
     ventana.title("Tabla para encontrar los bits de paridad")
     ventana.resizable(False, False)
@@ -70,6 +70,9 @@ def tablaBitsParidad(sin_paridad, con_paridad):
 
     resultadoFinal = Label(ventana, text=f"Numero Final: {con_paridad}")
     resultadoFinal.grid(row=2, column=0, columnspan=3, padx=5, pady=5)
+
+    paridadFinal = Label(ventana, text=f"Paridad: {paridad}")
+    paridadFinal.grid(row=3, column=0, columnspan=3, padx=5, pady=5)
 
     ventana.mainloop()  # Iniciamos el bucle de eventos
 

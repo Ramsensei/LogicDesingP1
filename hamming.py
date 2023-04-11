@@ -1,7 +1,6 @@
 # Python program to demonstrate
 # hamming code
  
- 
 def calcRedundantBits(m):
  
     # Use the formula 2 ^ r >= m + r + 1
@@ -37,14 +36,14 @@ def posRedundantBits(data, r):
     return res[::-1]
  
  
-def calcParityBits(arr, r):
+def calcParityBits(arr, r, paridad):
     n = len(arr)
     parBits = ""
  
     # For finding rth parity bit, iterate over
     # 0 to r - 1
     for i in range(r):
-        val = 0
+        val = paridad
         for j in range(1, n + 1):
  
             # If position has 1 in ith significant
@@ -60,14 +59,14 @@ def calcParityBits(arr, r):
     return arr
  
  
-def detectError(arr, nr):
+def detectError(arr, nr, paridad):
     n = len(arr)
     res = 0
     errorTests = [0, 0, 0, 0]
  
     # Calculate parity bits again
     for i in range(nr):
-        val = 0
+        val = paridad
         for j in range(1, n + 1):
             if(j & (2**i) == (2**i)):
                 val = val ^ int(arr[-1 * j])

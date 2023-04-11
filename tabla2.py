@@ -15,7 +15,7 @@ def valoresDeParidad(con_paridad, i):
             lista_numeros[j] = "-"
     return tuple(lista_numeros)
 
-def tablaHamming(recibido, tests):
+def tablaHamming(recibido, tests, posRes):
     ventana2 = Toplevel()
     ventana2.title("Tabla 2. Comprobación de los bits de paridad")
     ventana2.resizable(False,False)
@@ -66,6 +66,9 @@ def tablaHamming(recibido, tests):
     for i in range(1,5):
         tablaHamming.insert("", "end", values=("p{}".format(i), ) + valoresDeParidad(recibido, i-1) + (determinarError(tests[i-1]), tests[i-1]), tags=("separador",))
         tablaHamming.tag_bind("separador", f"<<TreeviewSelect{i}>>", lambda e: "break")
+
+    resultadoFinal = Label(ventana2, text=f"Posición: {posRes}")
+    resultadoFinal.grid(row=2, column=0, columnspan=3, padx=5, pady=5)
 
     ventana2.mainloop()  # Iniciamos el bucle de eventos
 

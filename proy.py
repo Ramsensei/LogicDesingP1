@@ -62,25 +62,29 @@ def mostrarTablaBitsParidad():
     arr = posRedundantBits(data, r)
     
     # Determine the parity bits
-    datos_recibidos = calcParityBits(arr, r)
+    datos_recibidos = calcParityBits(arr, r, genParidad())
 
-    lblDatos["text"] = "Datos Recividos: " + datos_recibidos
+    lblDatos["text"] = "Datos Recibidos: " + datos_recibidos
 
-    tablaBitsParidad(data, datos_recibidos)
+    tablaBitsParidad(data, datos_recibidos, paridadSelector.get())
 
 def mostrarTablaHamming():
 
-    correction, err = detectError(datos_recibidos, PAR_BITS)
+    correction, err = detectError(datos_recibidos, PAR_BITS,genParidad())
 
-    tablaHamming(datos_recibidos, err)
+    tablaHamming(datos_recibidos, err, correction)
 
 def genError():
     global datos_recibidos, errPos, lblDatos
     pos = int(errPos.get())
     if (pos >= 1 and pos <= 15):
+        if (errPos["state"]==DISABLED):
+            errPos["state"]=NORMAL
+        elif (errPos["state"]==NORMAL):
+            errPos["state"]=DISABLED
         pos -= 1
         datos_recibidos = datos_recibidos[:pos] + str(int(datos_recibidos[pos]) ^ 1) + datos_recibidos[pos+1:]
-        lblDatos["text"] = "Datos Recividos: " + datos_recibidos
+        lblDatos["text"] = "Datos Recibidos: " + datos_recibidos
 
 def convertir():
     global datos_binario
@@ -99,9 +103,13 @@ def convertir():
     except ValueError:
         messagebox.showerror("Error", "El número ingresado no es hexadecimal")
 
-
-
-    
+def genParidad():
+    valorParidad=0
+    if (paridadSelector.get()=="PAR"):
+        valorParidad=0
+    elif (paridadSelector.get()=="IMPAR"):
+        valorParidad=1
+    return valorParidad
 
 # Creamos la ventana principal
 ventana = Tk()
@@ -116,14 +124,16 @@ Button(ventana, text="Convertir", command=convertir).grid(row=0, column=2, padx=
 
 errPos = Spinbox(ventana, from_= 0, to= 15, increment = 1, wrap = True)
 errPos.grid(row=2, column=0, padx=5, pady=5)
-lblDatos = Label(ventana, text="Datos Recividos: " + datos_recibidos)
+lblDatos = Label(ventana, text="Datos Recibidos: " + datos_recibidos)
 lblDatos.grid(row=2, column=2, padx=5, pady=5)
 
 
 Button(ventana, text="Añadir Error", command=genError).grid(row=2, column=1, padx=5, pady=5)
-Button(ventana, text="Mostrar NZRI", command=lambda:nzri_plot(datos_binario)).grid(row=3, column=0, padx=5, pady=5)
+Button(ventana, text="Mostrar NRZI", command=lambda:nzri_plot(datos_binario)).grid(row=3, column=0, padx=5, pady=5)
 Button(ventana, text="Tabla Bits de Paridad", command=mostrarTablaBitsParidad).grid(row=3, column=1, padx=5, pady=5)
 Button(ventana, text="Tabla Bits de Hamming", command=mostrarTablaHamming).grid(row=3, column=2, padx=5, pady=5)
+paridadSelector = Spinbox(ventana, values=("PAR", "IMPAR"), wrap=True)
+paridadSelector.grid(row=4,column=0,padx=5,pady=5)
 
 
 
